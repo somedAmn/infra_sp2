@@ -6,42 +6,70 @@ api_yamdb
 на произведения, которые делятся на категории
 («Книги», «Фильмы», «Музыка») и жанры.
 
-### Как запустить проект:
-Клонировать репозиторий и перейти в него в командной строке:
+### Разработчики проекта
+- [Бочкарёв Владислав (тимлид, разработка ресурсов Review и Comments)](https://github.com/somedAmn)
+- [Рыбин Глеб (разработка ресурсов Categories, Genres и Titles)](https://github.com/BearLikesVodka)
+- [Бланко Александра (разработка ресурсов Auth и Users)](https://github.com/AlexandraBlanko)
 
-```
-https://github.com/somedAmn/api_yamdb
-```
-Cоздать и активировать виртуальное окружение:
+### Запуск приложения в контейнерах
 
+1) Клонировать репозиторий и перейти в корневую папку:
 ```
-python -m venv venv
-```
-
-```
-source venv/Scripts/activate
-```
-Установить зависимости из файла requirements.txt:
-
-```
-python -m pip install --upgrade pip
+git clone git@github.com:somedAmn/infra_sp2.git
+cd infra_sp2
 ```
 
+2) Перейти в папку infra_sp2/infra и создать в ней файл .env с 
+переменными окружения, необходимыми для работы приложения.
 ```
-pip install -r requirements.txt
-```
-Выполнить миграции:
-
-```
-python manage.py migrate
+cd infra/
 ```
 
-Запустить проект:
-
+Пример содержимого файла:
 ```
-python3 manage.py runserver
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_HOST=db
+DB_PORT=5432
+SECRET_KEY=key
 ```
 
+3) Запустить docker-compose: 
+```
+docker-compose up -d
+```
+
+4) Выполнить миграции, создать суперпользователя и собрать статику:
+```
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py createsuperuser
+docker-compose exec web python manage.py collectstatic --no-input 
+```
+5) Проект доступен по адресу http://localhost/
+
+### Заполнение базы данных
+
+Нужно зайти на на http://localhost/admin/, авторизоваться и внести записи 
+в базу данных через админку.
+
+Резервную копию базы данных можно создать командой
+```
+docker-compose exec web python manage.py dumpdata > fixtures.json 
+```
+
+### Остановка контейнеров
+
+Для остановки работы приложения можно набрать в терминале команду Ctrl+C 
+либо открыть второй терминал и воспользоваться командой
+```
+docker-compose stop 
+```
+Также можно запустить контейнеры без их создания заново командой
+```
+docker-compose start 
+```
 ### Примеры запросов
 
 Регистрация нового пользователя
