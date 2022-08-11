@@ -9,9 +9,10 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import AccessToken
+from reviews.models import Category, Genre, Review, Title, User
 
 from api_yamdb.settings import EMAIL_SUBJECT, FROM_EMAIL, WRONG_CODE_MESSAGE
-from reviews.models import Category, Genre, Review, Title, User
+
 from .filters import TitleFilter
 from .mixins import CreateListDeleteViewSet
 from .pagination import UserPagination
@@ -22,7 +23,6 @@ from .serializers import (CategorySerializer, CommentSerializer,
                           SelfEditSerializer, SignUpSerializer,
                           TitlePostSerializer, TitleSerializer,
                           TokenSerializer, UserSerializer)
-
 
 EMAIL_MASSAGE = format('Confirmation code: {code}')
 
